@@ -1,0 +1,35 @@
+__pycache__/
+*.pyc
+.env
+Backend/code/data/raw/*.csv
+Backend/code/data/processed/*.csv
+
+Backend/mlruns/
+Backend/mlflow.db
+frontend/.angular/
+.ipynb_checkpoints/
+.vscode/
+*.csv
+*.db
+data/
+mlruns/
+mlflow.db
+Thumbs.db
+Service_ml/Model_recommendation_talents/data/raw/*.csv
+Service_ml/Model_recommendation_talents/data/processed/*.csv*.csv
+*.csv
+node_modules/node_modules/
+
+# Python virtual environments
+venv/
+.venv/
+**/venv/
+**/.venv/
+
+# Node
+node_modules/
+**/node_modules/
+
+# Python cache
+__pycache__/
+*.pyc

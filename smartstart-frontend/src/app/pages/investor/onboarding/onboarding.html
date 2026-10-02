@@ -1,0 +1,56 @@
+<div class="onboarding-container">
+  <div class="brand-header">
+    <h1>Invest IQ</h1>
+    <p>Smart Investing Onboarding</p>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-bar">
+    <div class="progress-fill" [style.width.%]="getProgress()"></div>
+  </div>
+
+  <p class="progress-text">
+    Étape {{ currentStep + 1 }} / {{ steps.length }}
+  </p>
+
+  <!-- CARD -->
+  <div class="step-card" *ngIf="step">
+
+    <div class="step-icon">{{ step.icon }}</div>
+
+    <h2>{{ step.title }}</h2>
+    <p class="desc">{{ step.description }}</p>
+
+    <!-- Choice -->
+    <div *ngIf="step.type === 'choice'" class="options-grid">
+      <button *ngFor="let option of getOptions()" (click)="select(option)" [class.selected]="isSelected(option)">
+        {{ option }}
+      </button>
+    </div>
+
+    <!-- Number -->
+    <div *ngIf="step.type === 'number'" class="number-box">
+      <input type="number" [(ngModel)]="selected[step.key]" min="0" placeholder="Entrer une valeur" />
+    </div>
+
+    <p class="error" *ngIf="error">{{ error }}</p>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-buttons">
+
+    <button (click)="back()" *ngIf="currentStep > 0">
+      ← Retour
+    </button>
+
+    <button (click)="next()" [disabled]="!canProceed() || loading">
+
+      <span *ngIf="!loading">
+        {{ currentStep === steps.length - 1 ? 'Terminer' : 'Suivant →' }}
+      </span>
+
+      <span *ngIf="loading">Chargement...</span>
+    </button>
+
+  </div>
+</div>

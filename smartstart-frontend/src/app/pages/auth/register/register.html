@@ -1,0 +1,157 @@
+<div class="page-wrapper">
+  <div class="register-card">
+
+    <!-- Header -->
+    <div class="card-header">
+      <div class="brand-logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="#0ea5e9"/>
+          <path d="M8 22 L16 10 L24 22" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="16" cy="18" r="2.5" fill="#38BDF8"/>
+        </svg>
+        <span class="brand-name">InvestIQ</span>
+      </div>
+      <h1 class="card-title">Créer un compte</h1>
+      <p class="card-subtitle">Plateforme décisionnelle pour Dirigeants & Investisseurs</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+
+      <!-- Role selector -->
+      <div class="field-group">
+        <label class="field-label">Je suis un…</label>
+        <div class="role-grid">
+          <button
+            type="button"
+            *ngFor="let r of roles"
+            class="role-card"
+            [class.active]="form.value.role === r.value"
+            (click)="selectRole(r.value)"
+          >
+            <span class="role-icon" [ngClass]="'icon-' + r.icon"></span>
+            <span class="role-label">{{ r.label }}</span>
+            <span class="role-desc">{{ r.description }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Name row -->
+      <div class="field-row">
+        <div class="field-group">
+          <label class="field-label" for="username">Nom d'utilisateur <span class="required">*</span></label>
+          <div class="input-wrapper" [class.error]="getFieldError('username')">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <input
+              id="username"
+              type="text"
+              class="field-input"
+              formControlName="username"
+              placeholder="ex: john_doe"
+              autocomplete="username"
+            />
+          </div>
+          <span class="field-error" *ngIf="getFieldError('username')">{{ getFieldError('username') }}</span>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="full_name">Nom complet</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="2" y="3" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <input
+              id="full_name"
+              type="text"
+              class="field-input"
+              formControlName="full_name"
+              placeholder="ex: John Doe"
+              autocomplete="name"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="field-group">
+        <label class="field-label" for="email">Adresse email <span class="required">*</span></label>
+        <div class="input-wrapper" [class.error]="getFieldError('email')">
+          <svg class="input-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M1 6l7 4 7-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input
+            id="email"
+            type="email"
+            class="field-input"
+            formControlName="email"
+            placeholder="vous@example.com"
+            autocomplete="email"
+          />
+        </div>
+        <span class="field-error" *ngIf="getFieldError('email')">{{ getFieldError('email') }}</span>
+      </div>
+
+      <!-- Password -->
+      <div class="field-group">
+        <label class="field-label" for="password">Mot de passe <span class="required">*</span></label>
+        <div class="input-wrapper" [class.error]="getFieldError('password')">
+          <svg class="input-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <rect x="3" y="7" width="10" height="7" rx="1.5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            class="field-input"
+            formControlName="password"
+            placeholder="Min. 8 car., 1 majuscule, 1 chiffre"
+            autocomplete="new-password"
+          />
+          <button type="button" class="toggle-password" (click)="showPassword = !showPassword" tabindex="-1">
+            <svg *ngIf="!showPassword" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            <svg *ngIf="showPassword" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M2 2l12 12M6.5 6.6A2 2 0 0010 10M4.5 4.6C3 5.5 2 7 2 8s2.5 5 6 5c1.3 0 2.5-.4 3.5-1M7 3.1C7.3 3 7.7 3 8 3c3.5 0 6 4 6 5s-.7 1.8-1.8 2.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="password-hints">
+          <span class="hint" [class.ok]="form.value.password?.length >= 8">8+ caractères</span>
+          <span class="hint" [class.ok]="form.value.password && /[A-Z]/.test(form.value.password)">Majuscule</span>
+          <span class="hint" [class.ok]="form.value.password && /\d/.test(form.value.password)">Chiffre</span>
+        </div>
+        <span class="field-error" *ngIf="getFieldError('password')">{{ getFieldError('password') }}</span>
+      </div>
+
+      <!-- Server error -->
+      <div class="server-error" *ngIf="serverError">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M8 5v3M8 11v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        {{ serverError }}
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="submit-btn" [disabled]="loading">
+        <span class="btn-text" *ngIf="!loading">Créer mon compte</span>
+        <span class="btn-spinner" *ngIf="loading">
+          <span class="spinner"></span>
+          Création en cours…
+        </span>
+      </button>
+
+    </form>
+
+    <!-- Footer -->
+    <p class="login-link">
+      Déjà un compte ? <a routerLink="/login">Se connecter</a>
+    </p>
+
+  </div>

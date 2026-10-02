@@ -1,0 +1,376 @@
+<div class="layout">
+
+  <!-- ── SIDEBAR ─────────────────────────────────────────────────────── -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <span class="brand-mark-i">I</span>
+        <div class="brand-mark-pulse"></div>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">InvestIQ</span>
+        <span class="brand-tag">AI Platform</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <div class="nav-section">
+        <span class="nav-label">MAIN</span>
+        <a class="nav-item active" routerLink="/dashboard/investor">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          <span>Dashboard</span>
+          <div class="nav-active-bar"></div>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <span class="nav-label">ANALYSIS</span>
+        <a class="nav-item" routerLink="/dashboard/analyze">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+          </svg>
+          <span>Company Analysis</span>
+        </a>
+        <a class="nav-item" routerLink="/dashboard/crypto-analysis">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M9.5 8H14a2 2 0 0 1 0 4H9.5M9.5 12H14a2 2 0 0 1 0 4H9.5M9.5 8v10M12 6v2M12 16v2" />
+          </svg>
+          <span>Crypto Analysis</span>
+        </a>
+      </div>
+
+      <div class="nav-section">
+        <span class="nav-label">ACCOUNT</span>
+        <a class="nav-item" routerLink="/investor/onboarding">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          <span>My Profile</span>
+        </a>
+        <a class="nav-item" routerLink="/dashboard/investor/history" routerLinkActive="active">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          <span>Saved Portfolio</span>
+        </a>
+
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="avatar-wrap">
+        <div class="avatar">IN</div>
+        <div class="avatar-ring"></div>
+      </div>
+      <div class="user-info">
+        <div class="user-name">Investor</div>
+        <div class="user-role">Premium Account</div>
+      </div>
+      <div class="online-badge">
+        <span class="online-dot"></span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ─────────────────────────────────────────────────────────── -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-breadcrumb">
+          <span class="breadcrumb-root">InvestIQ</span>
+          <span class="breadcrumb-sep">/</span>
+          <span class="breadcrumb-current">Dashboard</span>
+        </div>
+        <h1 class="topbar-title">Investment Recommendations</h1>
+      </div>
+      <div class="topbar-right">
+        <div class="date-chip">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10" />
+            <polyline points="12 6 12 12 16 14" />
+          </svg>
+          {{ today }}
+        </div>
+        <div class="live-badge">
+          <span class="live-dot"></span>
+          <span>LIVE</span>
+        </div>
+        <button class="btn-refresh" (click)="loadRecommendations()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="23 4 23 10 17 10" />
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+          </svg>
+          Refresh
+        </button>
+      </div>
+    </header>
+
+    <!-- METRICS -->
+    <section class="metrics">
+      <div class="metric-card">
+        <div class="metric-icon-wrap blue">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </div>
+        <div class="metric-body">
+          <div class="metric-label">Opportunities</div>
+          <div class="metric-value blue">{{ recommendations.length }}</div>
+          <div class="metric-sub">Active matches</div>
+        </div>
+        <div class="metric-sparkline blue"></div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon-wrap green">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+            <polyline points="17 6 23 6 23 12" />
+          </svg>
+        </div>
+        <div class="metric-body">
+          <div class="metric-label">Buy Signals</div>
+          <div class="metric-value green">{{ getBuyCount() }}</div>
+          <div class="metric-sub">Strong opportunities</div>
+        </div>
+        <div class="metric-sparkline green"></div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon-wrap amber">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon
+              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+        </div>
+        <div class="metric-body">
+          <div class="metric-label">Avg Score</div>
+          <div class="metric-value amber">{{ getAvgScore() }}<span class="metric-unit">%</span></div>
+          <div class="metric-sub">Portfolio quality</div>
+        </div>
+        <div class="metric-sparkline amber"></div>
+      </div>
+
+      <div class="metric-card">
+        <div class="metric-icon-wrap purple">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path
+              d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" />
+          </svg>
+        </div>
+        <div class="metric-body">
+          <div class="metric-label">Top Sector</div>
+          <div class="metric-value purple sector-val">{{ getTopSector() }}</div>
+          <div class="metric-sub">Best performing</div>
+        </div>
+        <div class="metric-sparkline purple"></div>
+      </div>
+    </section>
+
+    <!-- FILTERS -->
+    <div class="filters-bar">
+      <div class="filters-left">
+        <button class="filter-btn" [class.active]="filter === 'ALL'" (click)="setFilter('ALL')">
+          All <span class="filter-count">{{ recommendations.length }}</span>
+        </button>
+        <button class="filter-btn strong-buy-btn" [class.active]="filter === 'STRONG BUY'"
+          (click)="setFilter('STRONG BUY')">
+          <span class="f-dot" style="background:#00ff87"></span> Strong Buy
+        </button>
+        <button class="filter-btn buy-btn" [class.active]="filter === 'BUY'" (click)="setFilter('BUY')">
+          <span class="f-dot" style="background:#3b82f6"></span> Buy
+        </button>
+        <button class="filter-btn hold-btn" [class.active]="filter === 'HOLD'" (click)="setFilter('HOLD')">
+          <span class="f-dot" style="background:#f59e0b"></span> Hold
+        </button>
+        <button class="filter-btn avoid-btn" [class.active]="filter === 'AVOID'" (click)="setFilter('AVOID')">
+          <span class="f-dot" style="background:#ef4444"></span> Avoid
+        </button>
+      </div>
+      <div class="filters-right">
+        <span class="results-count">{{ getFiltered().length }} results</span>
+      </div>
+    </div>
+
+    <!-- LOADING -->
+    <div class="loading-state" *ngIf="loading">
+      <div class="loader-ring">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <p class="loading-text">Analyzing investments<span class="dots"></span></p>
+    </div>
+
+    <!-- RECOMMENDATIONS TABLE -->
+    <div class="rec-table" *ngIf="!loading">
+      <div class="table-head">
+        <span class="th">#</span>
+        <span class="th th-name">Company</span>
+        <span class="th th-sector">Sector / Region</span>
+        <span class="th th-signal">Signal</span>
+        <span class="th th-score">Score</span>
+        <span class="th th-action">Action</span>
+        <span class="th th-arrow"></span>
+      </div>
+
+      <div class="rec-row" *ngFor="let r of getFiltered(); let i = index" [class.expanded]="selectedId === i"
+        (click)="toggle(i)">
+
+        <div class="row-main">
+          <span class="row-rank">{{ i + 1 }}</span>
+
+          <div class="row-company">
+            <div class="company-avatar" [ngClass]="getSignalClass(r.score)">
+              {{ r.name?.charAt(0) }}
+            </div>
+            <div class="company-info">
+              <div class="company-name">{{ r.name }}</div>
+              <div class="company-id">#{{ r.company_id }}</div>
+            </div>
+          </div>
+
+          <div class="row-sector">
+            <span class="sector-tag">{{ r.sector }}</span>
+            <span class="region-tag">{{ r.region }}</span>
+          </div>
+
+          <div class="row-signal">
+            <span class="signal-badge" [ngClass]="getSignalClass(r.score)">
+              {{ getSignalLabel(r.score) }}
+            </span>
+          </div>
+
+          <div class="row-score">
+            <div class="score-arc" [ngClass]="getSignalClass(r.score)">
+              <span class="score-num">{{ (r.score * 100).toFixed(0) }}</span>
+              <span class="score-pct">%</span>
+            </div>
+            <div class="score-bar-mini">
+              <div class="score-bar-fill" [ngClass]="getSignalClass(r.score)" [style.width.%]="r.score * 100"></div>
+            </div>
+          </div>
+
+          <!-- ── ACTION BUTTONS ── -->
+          <div class="row-action" (click)="$event.stopPropagation()">
+            <button class="btn-interest" [class.interested]="r.isInterested" (click)="markInterested(r.company_id, i)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
+                [attr.stroke]="r.isInterested ? '#ef4444' : 'currentColor'"
+                [attr.fill]="r.isInterested ? '#ef4444' : 'none'" stroke-width="2">
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l8.84-8.84 1.06-1.06a5.5 5.5 0 000-7.78z" />
+              </svg>
+              {{ r.isInterested ? 'Saved' : 'Watch' }}
+            </button>
+
+            <button class="btn-buy" (click)="openInvestorEmail(r)">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+              Buy
+            </button>
+          </div>
+
+          <div class="row-arrow" [class.open]="selectedId === i">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- EXPANDED DETAILS -->
+        <div class="row-details" *ngIf="selectedId === i" (click)="$event.stopPropagation()">
+          <div class="details-inner">
+            <div class="details-metrics">
+              <div class="detail-tile">
+                <span class="dt-label">ML Score</span>
+                <span class="dt-value blue">{{ (r.ml_score * 100).toFixed(1) }}%</span>
+              </div>
+              <div class="detail-tile">
+                <span class="dt-label">Business Score</span>
+                <span class="dt-value green">{{ (r.business_score * 100).toFixed(1) }}%</span>
+              </div>
+              <div class="detail-tile">
+                <span class="dt-label">Final Score</span>
+                <span class="dt-value amber">{{ (r.score * 100).toFixed(1) }}%</span>
+              </div>
+              <div class="detail-tile">
+                <span class="dt-label">Beta</span>
+                <span class="dt-value">{{ r.beta?.toFixed(2) ?? 'N/A' }}</span>
+              </div>
+              <div class="detail-tile">
+                <span class="dt-label">EBITDA Margin</span>
+                <span class="dt-value">{{ r.ebitda ? (r.ebitda * 100).toFixed(1) + '%' : 'N/A' }}</span>
+              </div>
+              <div class="detail-tile">
+                <span class="dt-label">Decision</span>
+                <span class="signal-badge sm" [ngClass]="getSignalClass(r.score)">{{ getSignalLabel(r.score) }}</span>
+              </div>
+            </div>
+
+            <div class="score-breakdown">
+              <div class="breakdown-header">
+                <span class="breakdown-title">Score Breakdown</span>
+                <span class="breakdown-total">{{ (r.score * 100).toFixed(0) }} / 100</span>
+              </div>
+              <div class="breakdown-bars">
+                <div class="breakdown-row">
+                  <span class="br-label">ML</span>
+                  <div class="br-track">
+                    <div class="br-fill blue" [style.width.%]="r.ml_score * 100"></div>
+                  </div>
+                  <span class="br-val">{{ (r.ml_score * 100).toFixed(0) }}%</span>
+                </div>
+                <div class="breakdown-row">
+                  <span class="br-label">Business</span>
+                  <div class="br-track">
+                    <div class="br-fill green" [style.width.%]="r.business_score * 100"></div>
+                  </div>
+                  <span class="br-val">{{ (r.business_score * 100).toFixed(0) }}%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="empty-state" *ngIf="getFiltered().length === 0">
+        <div class="empty-icon">◎</div>
+        <p>No recommendations for this filter</p>
+      </div>
+    </div>
+
+    <!-- CHARTS -->
+    <section class="chart-section" *ngIf="!loading && recommendations.length > 0">
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Score Distribution</span>
+          <span class="chart-subtitle">All recommendations</span>
+        </div>
+        <div class="chart-wrap"><canvas #riskChart></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <span class="chart-title">Sector Allocation</span>
+          <span class="chart-subtitle">Portfolio breakdown</span>
+        </div>
+        <div class="chart-wrap"><canvas #sectorChart></canvas></div>
+      </div>
+    </section>
+
+  </main>
+</div>

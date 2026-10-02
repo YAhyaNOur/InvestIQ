@@ -1,0 +1,213 @@
+<div class="layout">
+    <!-- ── SIDEBAR ─────────────────────────────────────────────────────── -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">
+          <span class="brand-mark-i">I</span>
+          <div class="brand-mark-pulse"></div>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">InvestIQ</span>
+          <span class="brand-tag">AI Platform</span>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <div class="nav-section">
+          <span class="nav-label">MAIN</span>
+          <a class="nav-item" routerLink="/dashboard/investor" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+            <span>Dashboard</span>
+            <div class="nav-active-bar"></div>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <span class="nav-label">ANALYSIS</span>
+          <a class="nav-item" routerLink="/dashboard/analyze" routerLinkActive="active">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+            </svg>
+            <span>Company Analysis</span>
+            <div class="nav-active-bar"></div>
+          </a>
+          <a class="nav-item" routerLink="/dashboard/crypto-analysis" routerLinkActive="active">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.5 8H14a2 2 0 0 1 0 4H9.5M9.5 12H14a2 2 0 0 1 0 4H9.5M9.5 8v10M12 6v2M12 16v2" />
+            </svg>
+            <span>Crypto Analysis</span>
+            <div class="nav-active-bar"></div>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <span class="nav-label">ACCOUNT</span>
+          <a class="nav-item" routerLink="/dashboard/investor/history" routerLinkActive="active">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <polyline points="12 6 12 12 16 14" />
+            </svg>
+            <span>Saved Portfolio</span>
+            <div class="nav-active-bar"></div>
+          </a>
+          <a class="nav-item" routerLink="/investor/onboarding" routerLinkActive="active">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <span>My Profile</span>
+            <div class="nav-active-bar"></div>
+          </a>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="avatar-wrap">
+          <div class="avatar">IN</div>
+          <div class="avatar-ring"></div>
+        </div>
+        <div class="user-info">
+          <div class="user-name">Investor</div>
+          <div class="user-role">Accredited Member</div>
+        </div>
+        <div class="online-badge">
+          <span class="online-dot"></span>
+        </div>
+      </div>
+    </aside>
+
+  <main class="main">
+<div class="hist-root">
+
+  <!-- ── HEADER ── -->
+  <header class="hist-header">
+    <a routerLink="/dashboard/investor" class="hist-back">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    </a>
+    <div class="hist-header-text">
+      <span class="hist-eyebrow">Portfolio</span>
+      <h1 class="hist-title">Saved Companies</h1>
+    </div>
+    <div class="hist-badge">{{ interests.length }} tracked</div>
+  </header>
+
+  <!-- ── LOADING ── -->
+  <div class="hist-loading" *ngIf="loading">
+    <div class="hist-pulse"></div>
+    <span>Fetching your portfolio…</span>
+  </div>
+
+  <!-- ── EMPTY ── -->
+  <div class="hist-empty" *ngIf="!loading && interests.length === 0">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+    <p>No companies saved yet.</p>
+    <a routerLink="/dashboard/investor" class="hist-explore">Explore opportunities</a>
+  </div>
+
+  <!-- ── GRID ── -->
+  <div class="hist-grid" *ngIf="!loading && interests.length > 0">
+    <div class="hist-card" *ngFor="let r of interests; let i = index" [style.animation-delay]="(i * 80) + 'ms'">
+
+      <!-- TOP BAR -->
+      <div class="hcard-topbar" [ngClass]="getSignalClass(r.final_score)"></div>
+
+      <!-- CARD HEAD -->
+      <div class="hcard-head">
+        <div class="hcard-avatar" [ngClass]="getSignalClass(r.final_score)">
+          {{ r.name?.charAt(0) }}
+        </div>
+        <div class="hcard-meta">
+          <div class="hcard-name">{{ r.name }}</div>
+          <div class="hcard-tags">
+            <span class="htag sector">{{ r.sector ?? 'N/A' }}</span>
+            <span class="htag region">{{ r.region ?? 'N/A' }}</span>
+          </div>
+        </div>
+        <div class="hcard-signal" [ngClass]="getSignalClass(r.final_score)">
+          {{ getSignalLabel(r.final_score) }}
+        </div>
+      </div>
+
+      <!-- SCORE GAUGE SVG -->
+      <div class="hcard-gauge-wrap">
+        <svg class="hcard-gauge" viewBox="0 0 120 75" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 68 A50 50 0 0 1 105 68" stroke="#1e2a3a" stroke-width="10" stroke-linecap="round" fill="none"/>
+          <path [attr.d]="'M15 68 A50 50 0 0 1 105 68'"
+                stroke-width="10" stroke-linecap="round" fill="none"
+                [attr.stroke]="getSignalColor(r.final_score)"
+                [attr.stroke-dasharray]="getGaugeDash(r.final_score)"
+                stroke-dashoffset="0"/>
+          <text x="60" y="62" text-anchor="middle" class="gauge-num" [attr.fill]="getSignalColor(r.final_score)">
+            {{ (r.final_score * 100).toFixed(0) }}
+          </text>
+          <text x="60" y="74" text-anchor="middle" class="gauge-sub" fill="#64748b">score</text>
+        </svg>
+      </div>
+
+      <!-- STATS -->
+      <div class="hcard-stats">
+        <div class="hstat">
+          <span class="hstat-label">Sector</span>
+          <span class="hstat-val">{{ r.sector ?? '—' }}</span>
+        </div>
+        <div class="hstat-divider"></div>
+        <div class="hstat">
+          <span class="hstat-label">Region</span>
+          <span class="hstat-val">{{ r.region ?? '—' }}</span>
+        </div>
+        <div class="hstat-divider"></div>
+        <div class="hstat">
+          <span class="hstat-label">Signal</span>
+          <span class="hstat-val" [ngClass]="getSignalClass(r.final_score)">{{ getSignalLabel(r.final_score) }}</span>
+        </div>
+      </div>
+
+      <!-- MINI BAR CHART -->
+      <div class="hcard-chart">
+        <div class="hbar-title">Score Breakdown</div>
+        <div class="hbar-row">
+          <span class="hbar-name">ML</span>
+          <div class="hbar-track"><div class="hbar-fill blue" [style.width.%]="r.final_score * 65"></div></div>
+          <span class="hbar-val">{{ (r.final_score * 65).toFixed(0) }}%</span>
+        </div>
+        <div class="hbar-row">
+          <span class="hbar-name">Business</span>
+          <div class="hbar-track"><div class="hbar-fill green" [style.width.%]="r.final_score * 85"></div></div>
+          <span class="hbar-val">{{ (r.final_score * 85).toFixed(0) }}%</span>
+        </div>
+        <div class="hbar-row">
+          <span class="hbar-name">Final</span>
+          <div class="hbar-track">
+            <div class="hbar-fill" [ngClass]="getSignalClass(r.final_score)" [style.width.%]="r.final_score * 100"></div>
+          </div>
+          <span class="hbar-val">{{ (r.final_score * 100).toFixed(0) }}%</span>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="hcard-footer">
+        <span class="hcard-date">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          {{ r.created_at | date:'mediumDate' }}
+        </span>
+        <button class="hcard-contact" (click)="openEmail(r)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          Contact
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+  </main>
+</div>

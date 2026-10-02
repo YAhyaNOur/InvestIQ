@@ -1,0 +1,136 @@
+<div class="onboarding-container">
+
+  <div class="onboarding-header">
+    <div class="logo">
+      <span class="logo-icon">S</span>
+      SmartStart
+    </div>
+    <div class="step-badge">Company Setup</div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" style="width: 100%"></div>
+  </div>
+
+  <div class="step-content">
+    <div class="step-icon">🏢</div>
+    <h2>Setup your Company</h2>
+    <p class="step-desc">Tell us about your startup so investors can find you</p>
+
+    <div class="form-grid">
+
+      <!-- ── IDENTITY ── -->
+      <div class="form-group" [class.has-error]="submitted && !company.name">
+        <label>Company Name <span class="req">*</span></label>
+        <input [(ngModel)]="company.name" placeholder="Ex: TechCorp" [class.error-input]="submitted && !company.name">
+        <span class="field-error" *ngIf="submitted && !company.name">Required</span>
+      </div>
+
+      <div class="form-group" [class.has-error]="submitted && !company.sector">
+        <label>Sector <span class="req">*</span></label>
+        <select [(ngModel)]="company.sector" [class.error-input]="submitted && !company.sector">
+          <option value="">Select sector</option>
+          <option value="Tech">Technology</option>
+          <option value="Finance">Finance</option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="Industrials">Industrials</option>
+          <option value="Consumer">Consumer</option>
+          <option value="Real_Estate">Real Estate</option>
+          <option value="Energy">Energy</option>
+          <option value="Communication">Communication</option>
+        </select>
+        <span class="field-error" *ngIf="submitted && !company.sector">Required</span>
+      </div>
+
+      <div class="form-group" [class.has-error]="submitted && !company.industry_group">
+        <label>Industry Group <span class="req">*</span></label>
+        <input [(ngModel)]="company.industry_group" placeholder="Ex: Software"
+          [class.error-input]="submitted && !company.industry_group">
+        <span class="field-error" *ngIf="submitted && !company.industry_group">Required</span>
+      </div>
+
+      <div class="form-group" [class.has-error]="submitted && !company.region_std">
+        <label>Region <span class="req">*</span></label>
+        <select [(ngModel)]="company.region_std" [class.error-input]="submitted && !company.region_std">
+          <option value="">Select region</option>
+          <option value="North_America">North America</option>
+          <option value="Europe">Europe</option>
+          <option value="Asia">Asia</option>
+          <option value="Other">Other</option>
+        </select>
+        <span class="field-error" *ngIf="submitted && !company.region_std">Required</span>
+      </div>
+
+      <!-- ── SECTION DIVIDER ── -->
+      <div class="section-label">📊 Financial Metrics</div>
+      <!-- Beta -->
+      <div class="form-group" [class.has-error]="submitted && company.beta === null">
+        <label>Beta <span class="req">*</span></label>
+        <div class="input-hint">Market volatility relative to sector — 0.5 = low risk, 1.5 = high risk</div>
+        <input type="number" [(ngModel)]="company.beta" placeholder="Ex: 1.2" step="0.1" min="0"
+          [class.error-input]="submitted && company.beta === null">
+        <span class="field-error" *ngIf="submitted && company.beta === null">Required</span>
+      </div>
+
+      <!-- EBITDA Margins -->
+      <div class="form-group" [class.has-error]="submitted && company.ebitda_margins === null">
+        <label>EBITDA Margins <span class="req">*</span></label>
+        <div class="input-hint">Profitability ratio — enter 0.25 for 25%</div>
+        <input type="number" [(ngModel)]="company.ebitda_margins" placeholder="Ex: 0.25" step="0.01" min="-1" max="1"
+          [class.error-input]="submitted && company.ebitda_margins === null">
+        <span class="field-error" *ngIf="submitted && company.ebitda_margins === null">Required</span>
+      </div>
+
+      <!-- Revenue per Employee -->
+      <div class="form-group" [class.has-error]="submitted && company.revenue_per_employee === null">
+        <label>Revenue per Employee ($) <span class="req">*</span></label>
+        <div class="input-hint">Annual revenue ÷ headcount</div>
+        <input type="number" [(ngModel)]="company.revenue_per_employee" placeholder="Ex: 500000"
+          [class.error-input]="submitted && company.revenue_per_employee === null">
+        <span class="field-error" *ngIf="submitted && company.revenue_per_employee === null">Required</span>
+      </div>
+      <!-- Net Debt -->
+      <div class="form-group" [class.has-error]="submitted && company.net_debt === null">
+        <label>Net Debt ($) <span class="req">*</span></label>
+        <div class="input-hint">Total debt minus cash — can be negative</div>
+        <input type="number" [(ngModel)]="company.net_debt" placeholder="Ex: 200000"
+          [class.error-input]="submitted && company.net_debt === null">
+        <span class="field-error" *ngIf="submitted && company.net_debt === null">Required</span>
+      </div>
+
+      <!-- ── SECTION DIVIDER ── -->
+      <div class="section-label">🤖 ML Model Inputs</div>
+
+      <div class="form-group">
+        <label>Revenue Growth</label>
+        <div class="input-hint">Year-over-year revenue growth — enter 0.12 for 12%</div>
+        <input type="number" [(ngModel)]="company.revenue_growth" placeholder="Ex: 0.12" step="0.01" min="-1" max="10">
+      </div>
+
+      <div class="form-group">
+        <label>Current Ratio</label>
+        <div class="input-hint">Current assets ÷ current liabilities — above 1 is healthy</div>
+        <input type="number" [(ngModel)]="company.current_ratio" placeholder="Ex: 1.5" step="0.1" min="0">
+      </div>
+
+      <div class="form-group">
+        <label>Debt to Equity</label>
+        <div class="input-hint">Total debt ÷ shareholders' equity</div>
+        <input type="number" [(ngModel)]="company.debt_to_equity" placeholder="Ex: 0.8" step="0.01" min="0">
+      </div>
+
+    </div>
+
+    <div class="error-msg" *ngIf="error">
+      <span>⚠</span> {{ error }}
+    </div>
+
+    <button class="btn-submit" (click)="submit()" [disabled]="loading">
+      <span *ngIf="!loading">Launch Company →</span>
+      <span *ngIf="loading" class="btn-loading">
+        <span class="spinner-sm"></span> Creating...
+      </span>
+    </button>
+
+  </div>
+</div>

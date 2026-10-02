@@ -1,0 +1,173 @@
+{
+  "name": "notifier",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {},
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d3828811-a45e-47b7-b182-b13e28a6127f",
+      "name": "Schedule Trigger1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const recos = $('Lire les recos non notifiées').all();\n\nconst recosMap = new Map();\nfor (const item of recos) {\n  const tId = item.json.talent_id;\n  const jId = item.json.job_id;\n  if (!recosMap.has(tId)) recosMap.set(tId, new Set());\n  recosMap.get(tId).add(jId);\n}\n\nconst results = [];\nfor (const [tId, recJobs] of recosMap.entries()) {\n  const newIds = Array.from(recJobs);\n  if (newIds.length === 0) continue;\n  results.push({\n    talent_id: tId,\n    new_ids: newIds,\n    new_count: newIds.length\n  });\n}\n\nreturn results;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        512,
+        0
+      ],
+      "id": "3d7c7902-eff0-4c5b-bcc9-7a98bdf4c883",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "8a50c80b-692b-4f38-bda3-cad65b19e5e7",
+              "leftValue": "={{ $json.new_count }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        720,
+        0
+      ],
+      "id": "8942a951-0ae9-43b9-8d05-f65c6a850ee1",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO notifications (\n  user_id,\n  type,\n  title,\n  message,\n  data,\n  is_read,\n  created_at\n)\nVALUES (\n  {{ $json.talent_id }},\n  'new_recommendations',\n  '{{ $json.new_count }} nouvelle' ||\n  CASE WHEN {{ $json.new_count }} > 1 THEN 's' ELSE '' END ||\n  ' offre' ||\n  CASE WHEN {{ $json.new_count }} > 1 THEN 's' ELSE '' END ||\n  ' pour vous',\n\n  'De nouvelles opportunités correspondent à votre profil.',\n\n  jsonb_build_object(\n    'new_job_ids',\n    '{{ JSON.stringify($json.new_ids) }}'::jsonb\n  ),\n\n  false,\n\n  NOW()\n)\nON CONFLICT DO NOTHING;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        976,
+        -96
+      ],
+      "id": "3524a90e-1e7e-4b6c-be89-3f2609178cd9",
+      "name": "enregister les notif",
+      "credentials": {
+        "postgres": {
+          "id": "4YTShDdrHqUCxkdf",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n  jr.talent_id,\n  jr.job_id\nFROM job_recommendations jr\nWHERE NOT EXISTS (\n  SELECT 1 FROM notifications n\n  WHERE n.user_id = jr.talent_id\n    AND n.data->'new_job_ids' ? jr.job_id::text\n)\nAND NOT EXISTS (\n  SELECT 1 FROM user_seen_jobs s\n  WHERE s.talent_id = jr.talent_id\n    AND s.job_id = jr.job_id\n)",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.6,
+      "position": [
+        208,
+        0
+      ],
+      "id": "df454bed-d6f8-4fe5-8b0a-748b07d21542",
+      "name": "Lire les recos non notifiées",
+      "credentials": {
+        "postgres": {
+          "id": "4YTShDdrHqUCxkdf",
+          "name": "Postgres account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Lire les recos non notifiées",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "enregister les notif",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Lire les recos non notifiées": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "5a57e7cb-c8da-4f37-ab90-557367f49169",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e52b56d169e3951b754d0e3a8d6eb48842d28865b00da32da824d8308173c1a9"
+  },
+  "id": "TcuSACmw2tLuwX48",
+  "tags": []
+}

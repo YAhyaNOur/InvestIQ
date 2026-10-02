@@ -1,0 +1,94 @@
+{
+  "name": "My workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "investor-interest",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -336,
+        0
+      ],
+      "id": "ff88524e-b589-41cc-92bb-0570920df69c",
+      "name": "Webhook",
+      "webhookId": "f55a54d0-2e25-48af-be78-a1c08e4a1d53"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json.body || $input.first().json;\n\nconst growthScore = parseFloat(data.growth_score) || 0;\nconst riskScore = parseFloat(data.risk_score) || 0;\n\n// score global neutre (pas de BUY/REJECT)\nconst opportunityScore = Math.max(0, Math.round(growthScore - riskScore / 2));\n\nreturn [{\n  json: {\n    // Original data\n    company_name: data.company_name || 'Unknown',\n    investor_name: data.investor_name || 'Investor',\n    investor_email: data.investor_email || '',\n    growth_score: growthScore,\n    risk_score: riskScore,\n    sector: data.sector || 'N/A',\n    region: data.region || 'N/A',\n    beta: data.beta || 'N/A',\n    ebitda: data.ebitda || 'N/A',\n\n    // Computed\n    opportunity_score: opportunityScore,\n\n    // Growth styling\n    growth_color: growthScore > 60 ? '#10b981' : growthScore > 40 ? '#f59e0b' : '#ef4444',\n    growth_label: growthScore > 60 ? 'Strong Growth' : growthScore > 40 ? 'Moderate Growth' : 'Weak Growth',\n    growth_bar: Math.min(growthScore, 100),\n\n    // Risk styling\n    risk_color: riskScore < 40 ? '#10b981' : riskScore < 60 ? '#f59e0b' : '#ef4444',\n    risk_label: riskScore < 40 ? 'Low Risk' : riskScore < 60 ? 'Medium Risk' : 'High Risk',\n    risk_bar: Math.min(riskScore, 100),\n\n    // Beta\n    beta_label: parseFloat(data.beta) < 1\n      ? 'Stable'\n      : parseFloat(data.beta) < 1.5\n      ? 'Moderate'\n      : 'Volatile',\n\n    // Opportunity bar\n    opp_bar: Math.min(Math.max(0, opportunityScore), 100),\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        -160
+      ],
+      "id": "50143ca5-f29f-4dc5-9d70-b87bc7324ad3",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.investor_email }}",
+        "subject": "=SmartStart Analysis: {{ $json.company_name }} — {{ $json.decision }}",
+        "message": "=<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"UTF-8\">\n</head>\n\n<body style=\"margin:0;padding:0;background:#f8fafc;font-family:Arial,sans-serif\">\n\n<div style=\"max-width:600px;margin:0 auto;background:white;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)\">\n\n  <!-- HEADER -->\n  <div style=\"background:linear-gradient(135deg,#667eea,#764ba2);padding:32px;text-align:center;color:white\">\n    <div style=\"font-size:28px;margin-bottom:8px\">📊</div>\n    <h1 style=\"margin:0;font-size:22px\">Investment Analysis Report</h1>\n    <p style=\"margin:8px 0 0;opacity:0.85;font-size:14px\">AI-powered by SmartStart</p>\n  </div>\n\n  <!-- BODY -->\n  <div style=\"padding:28px\">\n\n    <p style=\"color:#475569;font-size:14px;margin-bottom:24px\">\n      Hello <strong>{{ $json.investor_name }}</strong>,<br><br>\n      Analysis completed for <strong style=\"color:#667eea\">{{ $json.company_name }}</strong>.\n    </p>\n\n    <!-- COMPANY -->\n    <div style=\"background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:16px;margin-bottom:24px\">\n      <div style=\"font-size:18px;font-weight:700\">🏢 {{ $json.company_name }}</div>\n      <div style=\"margin-top:8px\">\n        <span style=\"background:#eff6ff;color:#3b82f6;padding:3px 12px;border-radius:6px;font-size:12px;margin-right:6px\">\n          {{ $json.sector }}\n        </span>\n        <span style=\"background:#f0fdf4;color:#10b981;padding:3px 12px;border-radius:6px;font-size:12px\">\n          {{ $json.region }}\n        </span>\n      </div>\n    </div>\n\n    <!-- SCORES -->\n    <div style=\"margin-bottom:24px\">\n      <h3 style=\"font-size:13px;color:#94a3b8;text-transform:uppercase;margin-bottom:16px\">\n        Score Breakdown\n      </h3>\n\n      <!-- Growth -->\n      <div style=\"margin-bottom:16px\">\n        <div style=\"display:flex;justify-content:space-between;margin-bottom:6px\">\n          <span style=\"font-size:13px;font-weight:600\">📈 Growth Score</span>\n          <span style=\"font-size:16px;font-weight:700;color:{{ $json.growth_color }}\">\n            {{ $json.growth_score }}%\n          </span>\n        </div>\n        <div style=\"height:12px;background:#f1f5f9;border-radius:6px;overflow:hidden\">\n          <div style=\"height:100%;width:{{ $json.growth_bar }}%;background:{{ $json.growth_color }}\"></div>\n        </div>\n        <div style=\"font-size:11px;color:#94a3b8;margin-top:4px\">\n          {{ $json.growth_label }}\n        </div>\n      </div>\n\n      <!-- Risk -->\n      <div style=\"margin-bottom:16px\">\n        <div style=\"display:flex;justify-content:space-between;margin-bottom:6px\">\n          <span style=\"font-size:13px;font-weight:600\">⚠️ Risk Score</span>\n          <span style=\"font-size:16px;font-weight:700;color:{{ $json.risk_color }}\">\n            {{ $json.risk_score }}%\n          </span>\n        </div>\n        <div style=\"height:12px;background:#f1f5f9;border-radius:6px;overflow:hidden\">\n          <div style=\"height:100%;width:{{ $json.risk_bar }}%;background:{{ $json.risk_color }}\"></div>\n        </div>\n        <div style=\"font-size:11px;color:#94a3b8;margin-top:4px\">\n          {{ $json.risk_label }}\n        </div>\n      </div>\n\n      <!-- Opportunity -->\n      <div>\n        <div style=\"display:flex;justify-content:space-between;margin-bottom:6px\">\n          <span style=\"font-size:13px;font-weight:600\">⭐ Opportunity Score</span>\n          <span style=\"font-size:16px;font-weight:700;color:#667eea\">\n            {{ $json.opportunity_score }}%\n          </span>\n        </div>\n        <div style=\"height:12px;background:#f1f5f9;border-radius:6px;overflow:hidden\">\n          <div style=\"height:100%;width:{{ $json.opp_bar }}%;background:linear-gradient(90deg,#667eea,#764ba2)\"></div>\n        </div>\n      </div>\n    </div>\n\n    <!-- DETAILS -->\n    <table style=\"width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px\">\n      <tr style=\"background:#f8fafc\">\n        <td style=\"padding:10px;border:1px solid #e2e8f0;color:#64748b\">Beta</td>\n        <td style=\"padding:10px;border:1px solid #e2e8f0;font-weight:700\">{{ $json.beta }}</td>\n        <td style=\"padding:10px;border:1px solid #e2e8f0;color:#64748b\">{{ $json.beta_label }}</td>\n      </tr>\n    </table>\n\n    <!-- DISCLAIMER -->\n    <div style=\"background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:14px;font-size:12px;color:#92400e\">\n      <strong>⚡ Disclaimer:</strong> AI analysis only — this is not financial advice.\n    </div>\n\n  </div>\n\n  <!-- FOOTER -->\n  <div style=\"background:#f8fafc;padding:20px;text-align:center;border-top:1px solid #e2e8f0\">\n    <div style=\"font-size:16px;font-weight:700;color:#667eea\">SmartStart</div>\n    <p style=\"font-size:12px;color:#94a3b8;margin:4px 0 0\">\n      AI-powered Investment Intelligence\n    </p>\n  </div>\n\n</div>\n\n</body>\n</html>",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        -48
+      ],
+      "id": "03884594-4630-45a6-ab53-e7a1313dfee3",
+      "name": "Send a message",
+      "webhookId": "6f71b411-581c-4b74-8f38-2654d018005b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "owZm4J6WwgQqvZAv",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6ff89f5e-631b-465e-8e86-d76ff6541ff7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3cc6c2f7726ae09a9cb0ab0657a0aebeeeef925e1b38f8493a7645da58f51f2b"
+  },
+  "id": "azFEXWZvf0JLCIbV",
+  "tags": []
+}

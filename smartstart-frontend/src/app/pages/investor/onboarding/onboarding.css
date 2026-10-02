@@ -1,0 +1,165 @@
+.onboarding-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+
+  /* 💎 DARK FINTECH BACKGROUND */
+  background: radial-gradient(circle at top, #1b1f3a, #0b0f1a);
+  font-family: 'Inter', Arial, sans-serif;
+  color: white;
+}
+
+/* 🏷 BRAND */
+.brand-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.brand-header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-header p {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+/* 📊 PROGRESS */
+.progress-bar {
+  width: 100%;
+  max-width: 600px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  transition: 0.4s ease;
+  border-radius: 20px;
+}
+
+/* 🧊 CARD GLASS EFFECT */
+.step-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  padding: 2rem;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* ICON */
+.step-icon {
+  font-size: 2.8rem;
+  margin-bottom: 10px;
+}
+
+/* TITLE */
+.step-card h2 {
+  font-size: 1.4rem;
+  margin-bottom: 5px;
+}
+
+.desc {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  margin-bottom: 20px;
+}
+
+/* 🟦 OPTIONS */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+}
+
+.options-grid button {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.options-grid button:hover {
+  transform: translateY(-2px);
+  border-color: #4facfe;
+}
+
+.options-grid button.selected {
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  color: black;
+  font-weight: bold;
+}
+
+/* 🔢 INPUT */
+.number-box input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  outline: none;
+}
+
+.number-box input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 🔘 NAV */
+.nav-buttons {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.nav-buttons button {
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* BACK */
+.nav-buttons button:first-child {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+/* NEXT */
+.nav-buttons button:last-child {
+  background: linear-gradient(90deg, #4facfe, #00f2fe);
+  color: black;
+  font-weight: bold;
+}
+
+.nav-buttons button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ERROR */
+.error {
+  color: #ff4d4d;
+  margin-top: 10px;
+}

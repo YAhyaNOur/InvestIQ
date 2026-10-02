@@ -1,0 +1,71 @@
+<!-- src/app/pages/Startuper/dashboard-startuper/dashboard-startuper.html -->
+
+<div class="dashboard">
+
+  <header class="dash-header">
+    <div class="dash-header-left">
+      <div class="header-avatar">
+        <div class="avatar-placeholder">
+          <span class="avatar-initials">ST</span>
+        </div>
+      </div>
+      <div class="header-info">
+        <div class="header-greeting">Assistant IA</div>
+        <div class="header-sub">
+          <span class="badge badge-startuper">Dirigeant</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="tab-content">
+    <div class="ai-grid">
+      <div class="ai-panel">
+        <div class="ai-panel-header">
+          <div class="ai-icon">🤖</div>
+          <div>
+            <div class="ai-title">Assistant IA SmartStart</div>
+            <div class="ai-subtitle">Propulsé par Groq · Workflow n8n</div>
+          </div>
+          <div class="live-badge live-badge--ai" *ngIf="aiLoading()">
+            <span class="live-dot live-dot--pulse"></span>
+            Traitement…
+          </div>
+        </div>
+
+        <div class="ai-actions">
+          <button class="ai-btn ai-btn--primary" [disabled]="aiLoading()" (click)="triggerAI('summary')"> Résumé de mon entreprise</button>
+          <button class="ai-btn ai-btn--secondary" [disabled]="aiLoading()" (click)="triggerAI('career_advice')">🚀
+            Conseils stratégiques</button>
+        </div>
+
+        <div class="chat-messages" #chatBox>
+          <div *ngFor="let msg of messages()" class="chat-msg" [class.chat-msg--ai]="msg.role === 'ai'"
+            [class.chat-msg--user]="msg.role === 'user'">
+            <span class="msg-role">{{ msg.role === 'ai' ? '🤖' : '👤' }}</span>
+            <div class="msg-text">{{ msg.text }}</div>
+          </div>
+          <div class="chat-typing" *ngIf="aiLoading()">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+        </div>
+
+        <div class="ai-error" *ngIf="aiError() && !aiLoading()">
+          <span>⚠</span> {{ aiError() }}
+        </div>
+
+        <div class="ai-input-row">
+          <input class="ai-input" type="text"
+            placeholder="Ex: Quels sont les points forts de mon entreprise pour les investisseurs ?" [(ngModel)]="customPrompt"
+            [disabled]="aiLoading()" (keyup.enter)="sendCustomPrompt()" />
+          <button class="ai-send" [disabled]="aiLoading() || !customPrompt.trim()"
+            (click)="sendCustomPrompt()">↑</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>

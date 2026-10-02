@@ -1,0 +1,269 @@
+<div class="layout">
+    <!-- ── SIDEBAR ─────────────────────────────────────────────────────── -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-mark">
+                <span class="brand-mark-i">I</span>
+                <div class="brand-mark-pulse"></div>
+            </div>
+            <div class="brand-text">
+                <span class="brand-name">InvestIQ</span>
+                <span class="brand-tag">AI Platform</span>
+            </div>
+        </div>
+
+        <nav class="nav">
+            <div class="nav-section">
+                <span class="nav-label">MAIN</span>
+                <a class="nav-item" routerLink="/dashboard/investor">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <span class="nav-label">ANALYSIS</span>
+                <a class="nav-item active" routerLink="/dashboard/analyze">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                    </svg>
+                    <span>Company Analysis</span>
+                    <div class="nav-active-bar"></div>
+                </a>
+                <a class="nav-item" routerLink="/dashboard/crypto-analysis">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M9.5 8H14a2 2 0 0 1 0 4H9.5M9.5 12H14a2 2 0 0 1 0 4H9.5M9.5 8v10M12 6v2M12 16v2" />
+                    </svg>
+                    <span>Crypto Analysis</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <span class="nav-label">ACCOUNT</span>
+                <a class="nav-item" routerLink="/dashboard/investor/history">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span>Saved Portfolio</span>
+                </a>
+                <a class="nav-item" routerLink="/investor/onboarding">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    <span>My Profile</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="avatar-wrap">
+                <div class="avatar">IN</div>
+                <div class="avatar-ring"></div>
+            </div>
+            <div class="user-info">
+                <div class="user-name">Investor</div>
+                <div class="user-role">Accredited Member</div>
+            </div>
+            <div class="online-badge">
+                <span class="online-dot"></span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <h1>Company Analysis</h1>
+                <p>Enter a stock symbol to get AI-powered insights</p>
+            </div>
+        </header>
+
+        <!-- SEARCH -->
+        <div class="search-section">
+            <div class="search-box">
+                <input [(ngModel)]="symbol" placeholder="Enter symbol:..." (keyup.enter)="analyze()"
+                    class="search-input" [disabled]="loading">
+                <button class="btn-analyze" (click)="analyze()" [disabled]="loading || !symbol.trim()">
+                    <span *ngIf="!loading">🔍 Analyze</span>
+                    <span *ngIf="loading">⏳ Loading...</span>
+                </button>
+            </div>
+
+            <!-- Quick searches -->
+            <div class="quick-list">
+                <span class="quick-label">Popular:</span>
+                <button *ngFor="let s of popularSymbols" class="quick-btn" (click)="quickSearch(s.symbol)">
+                    {{ s.symbol }}
+                </button>
+            </div>
+        </div>
+
+        <!-- ERROR -->
+        <div class="error-box" *ngIf="error">⚠ {{ error }}</div>
+
+        <!-- LOADING -->
+        <div class="loading-state" *ngIf="loading">
+            <div class="spinner"></div>
+            <p>Fetching data & running AI models...</p>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="results" *ngIf="result && !loading">
+
+            <!-- COMPANY HEADER -->
+            <div class="company-hero">
+                <div class="company-avatar">{{ result.symbol.charAt(0) }}</div>
+                <div class="company-info">
+                    <h2>{{ result.name }}</h2>
+                    <div class="company-sub">{{ result.symbol }} · {{ result.sector }} · {{ result.country }}</div>
+                    <div class="tags">
+                        <span class="tag blue">{{ result.sector }}</span>
+                        <span class="tag grey">{{ result.region }}</span>
+                        <span class="tag grey">{{ result.industry }}</span>
+                    </div>
+                </div>
+                <div class="invest-score">
+                    <div class="score-label">Investment Score</div>
+                    <div class="score-big" [style.color]="result.decision_color">
+                        {{ result.investment_score }}
+                    </div>
+                    <div class="score-decision" [style.color]="result.decision_color">
+                        {{ result.decision }}
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI CARDS -->
+            <div class="kpis">
+                <div class="kpi">
+                    <div class="kpi-label">📈 Growth Score</div>
+                    <div class="kpi-val" [style.color]="getScoreColor(result.growth_score)">
+                        {{ result.growth_score }}%
+                    </div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-label">⚠️ Risk Score</div>
+                    <div class="kpi-val" [style.color]="getScoreColor(100 - result.risk_score)">
+                        {{ result.risk_score }}%
+                    </div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-label">💰 Market Cap</div>
+                    <div class="kpi-val blue">{{ formatMarketCap(result.market_cap) }}</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-label">📊 P/E Ratio</div>
+                    <div class="kpi-val amber">{{ result.pe_ratio?.toFixed(1) || 'N/A' }}</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-label">⚡ Beta</div>
+                    <div class="kpi-val">{{ result.beta }}</div>
+                </div>
+                <div class="kpi">
+                    <div class="kpi-label">💵 Price</div>
+                    <div class="kpi-val green">${{ result.price?.toFixed(2) || 'N/A' }}</div>
+                </div>
+            </div>
+
+            <!-- CHARTS -->
+            <div class="charts-row">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <span class="chart-title">AI Score Breakdown</span>
+                    </div>
+                    <div class="chart-body">
+                        <canvas #scoresChart></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <span class="chart-title">Investment Score Gauge</span>
+                    </div>
+                    <div class="chart-body gauge-wrap">
+                        <canvas #gaugeChart></canvas>
+                        <div class="gauge-center">
+                            <div class="gauge-val" [style.color]="result.decision_color">
+                                {{ result.investment_score }}
+                            </div>
+                            <div class="gauge-label">/ 100</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- METRICS TABLE -->
+            <div class="metrics-card">
+                <div class="card-header">
+                    <span class="chart-title">Financial Metrics</span>
+                </div>
+                <table class="metrics-table">
+                    <tr>
+                        <td class="m-label">Revenue Growth</td>
+                        <td class="m-val">{{ result.revenue_growth }}%</td>
+                        <td class="m-assess" [style.color]="result.revenue_growth > 10 ? '#10b981' : '#f59e0b'">
+                            {{ result.revenue_growth > 10 ? '↑ Strong' : result.revenue_growth > 0 ? '→ Moderate' : '↓
+                            Declining' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="m-label">Debt/Equity</td>
+                        <td class="m-val">{{ result.debt_to_equity }}</td>
+                        <td class="m-assess" [style.color]="result.debt_to_equity < 1 ? '#10b981' : '#ef4444'">
+                            {{ result.debt_to_equity < 1 ? '✓ Low' : '⚠ High' }} </td>
+                    </tr>
+                    <tr>
+                        <td class="m-label">Current Ratio</td>
+                        <td class="m-val">{{ result.current_ratio }}</td>
+                        <td class="m-assess" [style.color]="result.current_ratio > 1.5 ? '#10b981' : '#f59e0b'">
+                            {{ result.current_ratio > 1.5 ? '✓ Healthy' : '⚠ Watch' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="m-label">EBITDA Margin</td>
+                        <td class="m-val">{{ result.ebitda_margins }}%</td>
+                        <td class="m-assess" [style.color]="result.ebitda_margins > 20 ? '#10b981' : '#f59e0b'">
+                            {{ result.ebitda_margins > 20 ? '✓ Excellent' : result.ebitda_margins > 10 ? '→ Good' : '⚠
+                            Low' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="m-label">Net Debt</td>
+                        <td class="m-val">${{ result.net_debt_m }}M</td>
+                        <td class="m-assess" [style.color]="result.net_debt_m < 0 ? '#10b981' : '#64748b'">
+                            {{ result.net_debt_m < 0 ? '✓ Net Cash' : 'Leveraged' }} </td>
+                    </tr>
+                    <tr>
+                        <td class="m-label">52W Range</td>
+                        <td class="m-val" colspan="2">
+                            ${{ result['52w_low']?.toFixed(2) }} — ${{ result['52w_high']?.toFixed(2) }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- DESCRIPTION -->
+            <div class="desc-card" *ngIf="result.description">
+                <div class="card-header"><span class="chart-title">About {{ result.name }}</span></div>
+                <p class="desc-text">{{ result.description }}...</p>
+            </div>
+
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div class="empty-state" *ngIf="!result && !loading && !searched">
+            <div class="empty-icon">🔍</div>
+            <h3>Search any company</h3>
+            <p>Enter a stock symbol to get AI-powered growth & risk analysis</p>
+        </div>
+
+    </main>
+</div>

@@ -1,0 +1,203 @@
+/* =========================
+   CONTAINER
+========================= */
+.profit-container {
+  max-width: 950px;
+  margin: 20px auto;
+  background: #05080d;
+  color: #d1d5db;
+  font-family: 'Consolas', 'Monaco', monospace;
+  padding: 20px;
+  border: 1px solid #1f2937;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* GRID BACKGROUND */
+.profit-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 30px 30px;
+  pointer-events: none;
+}
+
+/* =========================
+   TITLE
+========================= */
+h2 {
+  color: #ffffff;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  border-bottom: 1px solid #22d3ee;
+  padding-bottom: 10px;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+}
+
+/* =========================
+   FORM
+========================= */
+.form-card {
+  background: rgba(11, 18, 32, 0.8);
+  border: 1px solid #1f2937;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+  backdrop-filter: blur(6px);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.65rem;
+  color: #9ca3af;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+/* INPUTS */
+.input-group input, 
+.input-group select {
+  width: 100%;
+  background: #02060a;
+  border: 1px solid #374151;
+  color: #22d3ee;
+  padding: 10px;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+/* FOCUS EFFECT */
+.input-group input:focus, 
+.input-group select:focus {
+  border-color: #22d3ee;
+  box-shadow: 0 0 8px rgba(34, 211, 238, 0.25);
+}
+
+/* =========================
+   BUTTON
+========================= */
+.btn-predict {
+  grid-column: span 3;
+  margin-top: 15px;
+  background: linear-gradient(90deg, #0891b2, #0284c7);
+  color: #fff;
+  border: none;
+  padding: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  cursor: pointer;
+  width: 100%;
+  text-transform: uppercase;
+  transition: 0.3s;
+}
+
+.btn-predict:hover:not(:disabled) {
+  filter: brightness(1.15);
+  box-shadow: 0 0 18px rgba(34, 211, 238, 0.35);
+}
+
+.btn-predict:disabled {
+  background: #1f2937;
+  color: #4b5563;
+  cursor: not-allowed;
+}
+
+/* =========================
+   RESULT CARD
+========================= */
+.result-card {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  background: #0b1220;
+  border: 1px solid #1f2937;
+  border-left: 5px solid #22d3ee;
+  margin-top: 25px;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+/* SCORE */
+.score-section {
+  background: #000;
+  padding: 25px;
+  text-align: center;
+  border-right: 1px solid #1f2937;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.score-value {
+  font-size: 2.8rem;
+  font-weight: bold;
+  line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.score-label {
+  font-size: 0.6rem;
+  color: #4b5563;
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ANALYSIS */
+.analysis-section {
+  padding: 20px;
+}
+
+.badge-status {
+  display: inline-block;
+  padding: 5px 14px;
+  border: 1px solid;
+  font-size: 0.7rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: 0.3s;
+}
+
+.summary-text {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: #9ca3af;
+  margin: 0;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+   SELECT STYLE
+========================= */
+select option {
+  background: #0b1220;
+  color: #d1d5db;
+}

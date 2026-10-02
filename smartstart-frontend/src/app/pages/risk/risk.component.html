@@ -1,0 +1,99 @@
+<div class="analysis-container">
+  <div class="page-header">
+    <div class="header-content">
+      <span class="badge-ai">AI RISK ENGINE</span>
+      <h1>Risk Model Analysis</h1>
+      <p>Analyze debt structures and liquidity ratios in real-time.</p>
+    </div>
+  </div>
+
+  <div class="analysis-grid">
+    <div class="glass-card input-panel">
+      <div class="card-header">
+        <h3>Company Parameters</h3>
+        <div class="status-indicator">
+          <span class="pulse"></span> Ready
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="input-group">
+          <label>Sector</label>
+          <select [(ngModel)]="formData.Sector">
+            @for (sector of sectors; track sector) {
+              <option [value]="sector">{{ sector }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Region</label>
+          <select [(ngModel)]="formData.Region_std">
+            @for (region of regions; track region) {
+              <option [value]="region">{{ region.replace('_', ' ') }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label>Debt to Equity</label>
+          <input type="number" [(ngModel)]="formData.Debt_To_Equity" placeholder="e.g. 1.25">
+        </div>
+
+        <div class="input-group">
+          <label>Total Debt (M)</label>
+          <input type="number" [(ngModel)]="formData.Total_Debt_M" placeholder="0.00">
+        </div>
+
+        <div class="input-group">
+          <label>Current Ratio</label>
+          <input type="number" [(ngModel)]="formData.Current_Ratio" placeholder="0.00">
+        </div>
+
+        <div class="input-group">
+          <label>Employees Z-Score</label>
+          <input type="number" [(ngModel)]="formData.Employees_Sector_Z" placeholder="0.00">
+        </div>
+      </div>
+
+      <button (click)="onAnalyze()" class="main-btn" [disabled]="loading">
+        {{ loading ? 'Analyzing...' : 'Run Risk Assessment' }}
+      </button>
+    </div>
+
+    <div class="result-panel">
+      <div *ngIf="result" class="glass-card result-active" [style.--accent]="result.ui_display.color">
+        <div class="result-top">
+          <div class="score-display">
+            <svg viewBox="0 0 36 36" class="circular-chart">
+              <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="circle" [style.stroke]="result.ui_display.color" [attr.stroke-dasharray]="result.analysis.risk_score + ', 100'" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            </svg>
+            <div class="score-text">
+              <span class="num">{{ result.analysis.risk_score }}%</span>
+              <span class="label">Risk Score</span>
+            </div>
+          </div>
+          
+          <div class="verdict">
+            <span class="zone-pill" [style.background]="result.ui_display.color">
+              {{ result.analysis.zone }}
+            </span>
+            <div class="confidence">Confidence: {{ result.analysis.confidence }}</div>
+          </div>
+        </div>
+
+        <div class="action-box">
+          <h4>Recommended Action</h4>
+          <p class="action-text">{{ result.recommendation.action }}</p>
+          <div class="summary-text">{{ result.recommendation.summary }}</div>
+        </div>
+      </div>
+
+      <div *ngIf="!result && !loading" class="empty-card">
+        <div class="icon">📊</div>
+        <p>Enter data and run the scan to see the risk analysis results.</p>
+      </div>
+    </div>
+  </div>
+</div>

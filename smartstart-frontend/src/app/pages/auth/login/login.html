@@ -1,0 +1,113 @@
+<div class="login-wrapper">
+  <!-- Ambient background lighting -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <div class="login-card">
+    <!-- Brand Header -->
+    <div class="brand-header">
+      <div class="brand-logo">
+        <div class="logo-mark">
+          <span>I</span>
+          <div class="logo-dot"></div>
+        </div>
+        <div class="brand-info">
+          <div class="brand-title">Invest<span class="highlight">IQ</span></div>
+          <div class="brand-badge">EXECUTIVE SUITE</div>
+        </div>
+      </div>
+      <h1 class="welcome-heading">Accès Plateforme</h1>
+      <p class="welcome-sub">Espace sécurisé pour Fondateurs & Investisseurs</p>
+    </div>
+
+    <!-- Error message alert -->
+    <div class="error-banner" *ngIf="errorMessage">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span>{{ errorMessage }}</span>
+    </div>
+
+    <!-- Login Form -->
+    <form (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="email">Adresse email</label>
+        <div class="input-container">
+          <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="nom@entreprise.com"
+            [(ngModel)]="email"
+            [disabled]="isLoading"
+            required
+            autocomplete="email"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="password-label-row">
+          <label for="password">Mot de passe</label>
+        </div>
+        <div class="input-container">
+          <svg class="input-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="••••••••••••"
+            [(ngModel)]="password"
+            [disabled]="isLoading"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Se connecter en tant que <span class="role-hint">(si votre email a les deux rôles)</span></label>
+        <div class="role-switch">
+          <button type="button" class="role-option" [class.active]="role === 'STARTUPER'"
+                  (click)="role = role === 'STARTUPER' ? '' : 'STARTUPER'" [disabled]="isLoading">Dirigeant</button>
+          <button type="button" class="role-option" [class.active]="role === 'INVESTOR'"
+                  (click)="role = role === 'INVESTOR' ? '' : 'INVESTOR'" [disabled]="isLoading">Investisseur</button>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="isLoading">
+        <span *ngIf="!isLoading" class="btn-content">
+          <span>Se connecter</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </span>
+        <span *ngIf="isLoading" class="btn-loading">
+          <span class="spinner"></span>
+          <span>Authentification…</span>
+        </span>
+      </button>
+    </form>
+
+    <!-- Footer Links -->
+    <div class="login-footer">
+      <p class="register-prompt">
+        Nouveau sur InvestIQ ?
+        <a routerLink="/register" class="register-link">Créer un compte</a>
+      </p>
+      <div class="platform-meta">
+        <span class="meta-dot"></span>
+        <span>Système décisionnel ML & Valorisation en direct</span>
+      </div>
+    </div>
+  </div>
+</div>

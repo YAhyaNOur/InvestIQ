@@ -1,0 +1,223 @@
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">I</div>
+      <span class="brand-name">InvestIQ</span>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">MAIN</div>
+
+      <a class="nav-item" routerLink="/dashboard/startuper/ceo" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: true}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+        </svg>
+        CEO Dashboard
+      </a>
+
+      <a class="nav-item" routerLink="/dashboard/startuper" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: true}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+        </svg>
+        Dashboard
+      </a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-label">COMPANY</div>
+      <a class="nav-item" routerLink="/startuper/onboarding" routerLinkActive="active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+        </svg>
+        Edit Company
+      </a>
+
+      <!-- ← INVESTIQ ICI, DANS LE NAV-GROUP -->
+      <a class="nav-item" routerLink="/dashboard/invest-analyzer" routerLinkActive="active">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+        </svg>
+        InvestIQ Analyzer
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="avatar">ST</div>
+      <div class="user-info">
+        <div class="user-name">{{ company?.name || 'Startuper' }}</div>
+        <div class="user-role">{{ company?.sector || 'Startup' }}</div>
+      </div>
+      <div class="online-dot"></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div>
+        <h1>Company Dashboard</h1>
+        <p>{{ today }}</p>
+      </div>
+      <div class="topbar-right">
+        <div class="live-badge"><span class="live-dot"></span> Live</div>
+        <a routerLink="/startuper/onboarding" class="btn-edit">✎ Edit Company</a>
+      </div>
+    </header>
+
+    <!-- LOADING -->
+    <div class="loading-state" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading company data...</p>
+    </div>
+
+    <!-- ERROR -->
+    <div class="empty-state" *ngIf="!loading && error">
+      <p>{{ error }}</p>
+      <a routerLink="/startuper/onboarding" class="btn-edit">✎ Edit Company</a>
+    </div>
+
+    <!-- CONTENT -->
+    <div *ngIf="!loading && company && !error">
+
+      <!-- COMPANY HEADER -->
+      <div class="company-hero">
+        <div class="company-avatar">{{ company.name?.charAt(0) }}</div>
+        <div class="company-info">
+          <h2>{{ company.name }}</h2>
+          <div class="company-tags">
+            <span class="ctag blue">{{ company.sector }}</span>
+            <span class="ctag grey">{{ company.industry_group }}</span>
+            <span class="ctag grey">{{ company.region_std }}</span>
+          </div>
+        </div>
+        <div class="attractiveness">
+          <div class="attr-label">Attractiveness Score</div>
+          <div class="attr-score" [class.score-high]="getAttractivenessScore() >= 60"
+            [class.score-mid]="getAttractivenessScore() >= 30 && getAttractivenessScore() < 60"
+            [class.score-low]="getAttractivenessScore() < 30">
+            {{ getAttractivenessScore() }}<span>/100</span>
+          </div>
+          <div class="attr-sub">Investor appeal</div>
+        </div>
+      </div>
+
+      <!-- KPI CARDS -->
+      <div class="kpis">
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Beta</span>
+            <span class="kpi-icon blue">β</span>
+          </div>
+          <div class="kpi-val blue">{{ company.beta?.toFixed(2) }}</div>
+          <div class="kpi-sub" [ngClass]="getRiskClass()">{{ getRiskLevel() }}</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">EBITDA Margin</span>
+            <span class="kpi-icon green">%</span>
+          </div>
+          <div class="kpi-val green">{{ (company.ebitda_margins * 100).toFixed(1) }}%</div>
+          <div class="kpi-sub">Profitability</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Rev / Employee</span>
+            <span class="kpi-icon amber">$</span>
+          </div>
+          <div class="kpi-val amber">${{ (company.revenue_per_employee / 1000).toFixed(0) }}k</div>
+          <div class="kpi-sub">Productivity</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-top">
+            <span class="kpi-label">Net Debt</span>
+            <span class="kpi-icon purple">Ð</span>
+          </div>
+          <div class="kpi-val purple">${{ (company.net_debt / 1000).toFixed(0) }}k</div>
+          <div class="kpi-sub" [class.good]="company.net_debt <= 0">
+            {{ company.net_debt <= 0 ? 'Net Cash ✓' : 'Leveraged' }} </div>
+          </div>
+        </div>
+
+        <!-- CHARTS -->
+        <div class="charts-grid">
+          <div class="chart-card span-2">
+            <div class="chart-header">
+              <span class="chart-title">Company Metrics Overview</span>
+              <span class="chart-badge">Your Data</span>
+            </div>
+            <div class="chart-body">
+              <canvas #metricsChart></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Benchmark vs Sector</span>
+              <span class="chart-badge">{{ company.sector }}</span>
+            </div>
+            <div class="chart-body">
+              <canvas #benchmarkChart></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <span class="chart-title">Company Profile Radar</span>
+              <span class="chart-badge">Score/150</span>
+            </div>
+            <div class="chart-body">
+              <canvas #profileChart></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- INSIGHTS -->
+        <div class="insights">
+          <div class="insight-header">
+            <span class="chart-title">💡 AI Insights</span>
+          </div>
+          <div class="insight-list">
+            <div class="insight-item" *ngIf="company.ebitda_margins > 0.2">
+              <span class="insight-icon good">✓</span>
+              <span>Strong profitability — EBITDA margin above 20% is attractive to investors</span>
+            </div>
+            <div class="insight-item" *ngIf="company.ebitda_margins <= 0.2">
+              <span class="insight-icon warn">!</span>
+              <span>Consider improving EBITDA margins — current level may concern investors</span>
+            </div>
+            <div class="insight-item" *ngIf="company.beta < 1.0">
+              <span class="insight-icon good">✓</span>
+              <span>Low beta signals stability — great for risk-averse investors</span>
+            </div>
+            <div class="insight-item" *ngIf="company.beta >= 1.3">
+              <span class="insight-icon warn">!</span>
+              <span>High beta indicates volatility — appeals to growth-focused investors</span>
+            </div>
+            <div class="insight-item" *ngIf="company.revenue_per_employee > 500000">
+              <span class="insight-icon good">✓</span>
+              <span>Excellent productivity — revenue per employee above $500k is top-tier</span>
+            </div>
+            <div class="insight-item" *ngIf="company.net_debt <= 0">
+              <span class="insight-icon good">✓</span>
+              <span>Net cash position — your company has more cash than debt</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+  </main>
+
+</div>

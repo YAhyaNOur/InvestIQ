@@ -1,0 +1,83 @@
+<div class="model-page">
+  <header class="section-header">
+    <div class="header-left">
+      <span class="model-badge anomaly">AI ANOMALY ENGINE</span>
+      <h1>Anomaly Detection Terminal</h1>
+      <p>Identification of structural divergences using Isolation Forest v2.1</p>
+    </div>
+  </header>
+
+  <div class="analysis-grid">
+    <section class="glass-card">
+      <div [formGroup]="form">
+        <div class="card-title">Structural Parameters</div>
+        
+        <div class="form-grid-anomaly">
+          <div class="input-group">
+            <label>Debt to Revenue</label>
+            <input type="number" formControlName="Debt_to_Revenue" step="0.1" placeholder="0.0">
+          </div>
+
+          <div class="input-group">
+            <label>Current Ratio</label>
+            <input type="number" formControlName="Current_Ratio" step="0.1" placeholder="1.0">
+          </div>
+
+          <div class="input-group">
+            <label>Revenue per Employee</label>
+            <input type="number" formControlName="Revenue_per_Employee" step="1000" placeholder="50000">
+          </div>
+
+          <div class="input-group">
+            <label>Net Debt (M)</label>
+            <input type="number" formControlName="Net_Debt" placeholder="0">
+          </div>
+
+          <div class="input-group">
+            <label>Sector Z-Score</label>
+            <input type="number" formControlName="Employees_Sector_Z" step="0.1" placeholder="0.0">
+          </div>
+        </div>
+
+        <button (click)="submit()" [disabled]="form.invalid || loading()" class="btn-execute-scan">
+          <span>{{ loading() ? 'ANALYZING ANOMALIES...' : 'EXECUTE ANOMALY SCAN' }}</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="result-container">
+      @if (result(); as data) {
+        <div class="anomaly-result-card" [attr.data-severity]="data.anomaly_label">
+          <div class="severity-hero">
+            <div class="severity-gauge">
+              <span class="sev-value">{{ data.anomaly_severity }}</span>
+              <span class="sev-max">/ 100</span>
+            </div>
+            <div class="sev-label">SEVERITY INDEX</div>
+          </div>
+
+          <div class="analysis-details">
+            <div class="status-badge-modern">
+               {{ data.anomaly_label }}
+            </div>
+
+            <div class="report-box">
+              <div class="report-header">ANOMALY REPORT</div>
+              <p *ngIf="data.is_anomaly" class="report-text warning">
+                ⚠️ <strong>ISOLATION DETECTED:</strong> Data point deviates significantly from the typical sector cluster (Score: {{ data.anomaly_score }}).
+              </p>
+              <p *ngIf="!data.is_anomaly" class="report-text success">
+                Structural integrity confirmed. No significant deviations from typical patterns detected.
+              </p>
+            </div>
+          </div>
+        </div>
+      } @else {
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <p>Awaiting structural data for scan...</p>
+        </div>
+      }
+    </section>
+  </div>
+</div>

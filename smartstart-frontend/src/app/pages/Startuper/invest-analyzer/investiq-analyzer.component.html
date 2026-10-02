@@ -1,0 +1,284 @@
+<div class="layout">
+    <!-- ── CEO SIDEBAR ─────────────────────────────────────────────────────── -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">I</div>
+        <div class="brand-text">
+          <span class="brand-name">InvestIQ</span>
+          <span class="brand-tag">CEO Suite</span>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">EXECUTIVE</div>
+
+        <a class="nav-item" routerLink="/dashboard/startuper/ceo" routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" />
+            <rect x="14" y="3" width="7" height="7" />
+            <rect x="3" y="14" width="7" height="7" />
+            <rect x="14" y="14" width="7" height="7" />
+          </svg>
+          CEO Cockpit
+        </a>
+
+        <a class="nav-item" routerLink="/dashboard/startuper" routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 3v18h18"/>
+            <path d="m19 9-5 5-4-4-3 3"/>
+          </svg>
+          Operations & Metrics
+        </a>
+
+        <a class="nav-item" routerLink="/dashboard/invest-analyzer" routerLinkActive="active">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+          InvestIQ Analyzer
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">COMPANY</div>
+        <a class="nav-item" routerLink="/startuper/onboarding" routerLinkActive="active">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 20h9" />
+            <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" />
+          </svg>
+          Company Profile
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="avatar">ST</div>
+        <div class="user-info">
+          <div class="user-name">Founder & CEO</div>
+          <div class="user-role">Enterprise Account</div>
+        </div>
+        <div class="online-dot"></div>
+      </div>
+    </aside>
+
+  <main class="main">
+<div class="investiq-page">
+
+    <!-- Header -->
+    <div class="page-header">
+        <div class="header-badge">
+            <span class="badge-icon">⚡</span>
+            <span>InvestIQ Analyzer</span>
+        </div>
+        <h1>Analysez votre projet</h1>
+        <p class="header-subtitle">Obtenez une analyse complète de votre projet interne : secteur, faisabilité, ROI
+            estimé et recommandations IA.</p>
+    </div>
+
+    <!-- Input Section -->
+    <div class="input-section" *ngIf="!result">
+
+        <div class="examples-row">
+            <span class="examples-label">Exemples :</span>
+            <button *ngFor="let example of exampleIdeas; let i = index" class="example-chip"
+                (click)="loadExample(example)">
+                Exemple {{ i + 1 }}
+            </button>
+        </div>
+
+        <div class="textarea-wrapper">
+            <textarea [(ngModel)]="projectDescription" (ngModelChange)="onTextChange()"
+                placeholder="Décrivez votre projet interne en détail : quel est l'objectif ? Quel budget ? Quelle équipe ? Quel délai prévu ?..."
+                class="project-textarea" [class.textarea-filled]="charCount > 0" maxlength="2000">
+            </textarea>
+            <div class="textarea-footer">
+                <span class="char-count" [class.char-warning]="charCount > 1800">
+                    {{ charCount }} / {{ maxChars }}
+                </span>
+                <span class="min-hint" *ngIf="charCount < 50 && charCount > 0">
+                    Minimum 50 caractères (encore {{ 50 - charCount }})
+                </span>
+            </div>
+        </div>
+
+        <div class="error-banner" *ngIf="errorMessage">
+            <span class="error-icon">⚠️</span>
+            {{ errorMessage }}
+        </div>
+
+        <button class="analyze-btn" (click)="analyze()" [disabled]="isLoading || charCount < 50">
+            <span *ngIf="!isLoading">
+                <span class="btn-icon">🔍</span>
+                Analyser mon projet
+            </span>
+            <span *ngIf="isLoading" class="loading-content">
+                <span class="spinner"></span>
+                Analyse en cours...
+            </span>
+        </button>
+
+        <div class="loading-steps" *ngIf="isLoading">
+            <div class="step step-active">
+                <span class="step-dot"></span>
+                Détection du secteur et des mots-clés
+            </div>
+            <div class="step">
+                <span class="step-dot"></span>
+                Scoring faisabilité, ROI &amp; risque
+            </div>
+            <div class="step">
+                <span class="step-dot"></span>
+                Génération LLM des recommandations
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-section" id="results-section" *ngIf="result">
+
+        <div class="results-topbar">
+            <button class="reset-btn" (click)="resetAnalysis()">
+                ← Nouvelle analyse
+            </button>
+            <div class="analysis-date">Analysé maintenant</div>
+        </div>
+
+        <!-- Global Score Card -->
+        <div class="score-hero" [ngClass]="getScoreClass(result.score)">
+            <div class="score-left">
+                <div class="score-number">{{ result.score }}</div>
+                <div class="score-max">/100</div>
+            </div>
+            <div class="score-right">
+                <div class="score-label">{{ getScoreLabel(result.score) }}</div>
+                <div class="score-sector">
+                    <span class="sector-tag">{{ result.sector }}</span>
+                    <span class="type-tag">{{ result.project_type }}</span>
+                </div>
+                <div class="score-funding">
+                    Budget estimé : <strong>{{ result.funding_potential }}</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sub-scores Grid — 4 métriques -->
+        <div class="metrics-grid">
+
+            <div class="metric-card">
+                <div class="metric-icon">📋</div>
+                <div class="metric-label">Faisabilité</div>
+                <div class="metric-bar-wrap">
+                    <div class="metric-bar">
+                        <div class="metric-fill feasibility" [style.width.%]="result.innovation_score"></div>
+                    </div>
+                    <span class="metric-value">{{ result.innovation_score }}/100</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">💰</div>
+                <div class="metric-label">ROI estimé</div>
+                <div class="metric-bar-wrap">
+                    <div class="metric-bar">
+                        <div class="metric-fill roi" [style.width.%]="result.market_potential"></div>
+                    </div>
+                    <span class="metric-value">{{ result.market_potential }}/100</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">⚠️</div>
+                <div class="metric-label">Risque opérationnel</div>
+                <div class="metric-bar-wrap">
+                    <div class="metric-bar">
+                        <div class="metric-fill risk" [ngClass]="getRiskClass(result.risk_level)"
+                            [style.width.%]="result.risk_level"></div>
+                    </div>
+                    <span class="metric-value risk-text" [ngClass]="getRiskClass(result.risk_level)">
+                        {{ getRiskLabel(result.risk_level) }} ({{ result.risk_level }}/100)
+                    </span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-icon">🎯</div>
+                <div class="metric-label">Score global pondéré</div>
+                <div class="metric-bar-wrap">
+                    <div class="metric-bar">
+                        <div class="metric-fill global" [style.width.%]="result.score"></div>
+                    </div>
+                    <span class="metric-value">{{ result.score }}/100</span>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Keywords -->
+        <div class="keywords-section">
+            <h3 class="section-title">Mots-clés détectés</h3>
+            <div class="keywords-list">
+                <span class="keyword-tag" *ngFor="let kw of result.keywords">{{ kw }}</span>
+                <span class="keyword-tag keyword-empty" *ngIf="result.keywords.length === 0">Aucun mot-clé sectoriel
+                    détecté — enrichissez la description</span>
+            </div>
+        </div>
+
+        <!-- Target Market -->
+        <div class="target-market-section">
+            <h3 class="section-title">Périmètre identifié</h3>
+            <p class="target-market-text">{{ result.target_market }}</p>
+        </div>
+
+        <!-- Avantages / Risques -->
+        <div class="pros-cons-grid">
+            <div class="pros-card">
+                <h3 class="pros-title">✅ Points forts</h3>
+                <ul class="insight-list">
+                    <li *ngFor="let adv of result.advantages" class="insight-item insight-pro">
+                        {{ adv }}
+                    </li>
+                </ul>
+            </div>
+
+            <div class="cons-card">
+                <h3 class="cons-title">⚠️ Points de vigilance</h3>
+                <ul class="insight-list">
+                    <li *ngFor="let dis of result.disadvantages" class="insight-item insight-con">
+                        {{ dis }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- LLM Recommendation -->
+        <div class="recommendation-card">
+            <div class="reco-header">
+                <span class="reco-badge">🤖 Analyse IA</span>
+                <span class="reco-subtitle">Généré par LLaMA via Ollama</span>
+            </div>
+            <p class="reco-text">{{ result.recommendation }}</p>
+        </div>
+
+        <!-- Prochaines étapes — adaptées entreprise -->
+        <div class="next-steps">
+            <h3>Prochaines étapes suggérées</h3>
+            <div class="steps-row">
+                <div class="next-step-card" routerLink="/planning">
+                    <span class="ns-icon">📅</span>
+                    <span class="ns-label">Plan d'exécution</span>
+                </div>
+                <div class="next-step-card" routerLink="/risk">
+                    <span class="ns-icon">🛡️</span>
+                    <span class="ns-label">Analyse des risques</span>
+                </div>
+                <div class="next-step-card" routerLink="/budget">
+                    <span class="ns-icon">💼</span>
+                    <span class="ns-label">Cadrage budgétaire</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+  </main>
+</div>
